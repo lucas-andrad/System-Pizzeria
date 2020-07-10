@@ -26,10 +26,10 @@ def loginRegister():
                     PrincipalUser = False
                 elif line['level'] == 2:
                     PrincipalUser = True
-                    authenticate = True
-                    break
-                else:
-                    authenticate = False
+                authenticate = True
+                break
+            else:
+                authenticate = False
         if not authenticate:
             print('Wrong username or password. Try Again')
     elif decision == 2:
@@ -56,7 +56,18 @@ def loginRegister():
     return authenticate, PrincipalUser
 
 
-
+def RegisterProduct():
+    name = input('Type the product name: ')
+    ingredients = input('Type the ingredients: ')
+    group = input('Type the product group: ')
+    price = float(input('Type the product price: '))
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(f'INSERT INTO products(name, ingredients, class, price) VALUES ("{name}", "{ingredients}", "{group}", "{price}")')
+            connection.commit()
+            print('Sucess! Product registered')
+    except:
+        print('UNKOWN ERROR')  
 
 
 while not auth:
@@ -71,5 +82,12 @@ while not auth:
 
     authenticate, PrincipalUser = loginRegister()
 
-if auth == True:
-    print('authenticate')
+    if authenticate == True:
+        print('authenticate')
+        if PrincipalUser == True:
+            UserDecision = 1
+            while UserDecision != 0:    
+                UserDecision = int(input('Type 0 for out, 1 for register product'))
+
+                if UserDecision == 1:
+                    RegisterProduct()
