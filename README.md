@@ -1,2 +1,2 @@
-# System-Pizzeria
-Simple web system for make a pizza order
+# Pizzeria-System
+Simple web system for make a to order pizza
