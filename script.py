@@ -69,6 +69,64 @@ def RegisterProduct():
     except:
         print('UNKOWN ERROR')  
 
+def ListProducts():
+    products = []
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT * FROM products')
+            results = cursor.fetchall()
+    except:
+        print('UNKOWN ERROR') 
+    for i in results:
+        products.append(i)
+    if len(products) != 0:
+        for i in range(0, len(products)):
+            print(products[i])
+    else:
+        print('0 products registereds')    
+
+def DeleteProducts():
+    id = int(input('Type the id for the product you want to delete'))
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(f'DELETE FROM products WHERE id = {id}')
+            connection.commit()
+            print('Success! Product deleted')
+    except:
+        print('UNKOWN ERROR')
+
+def ListOrders():
+    orders = []
+    decision = 0
+
+    while decision == 0:
+        orders.clear()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT * FROM orders')
+                results = cursor.fetchall()
+        except:
+            print('UNKOWN ERROR')
+        for i in results:
+            orders.append(i)
+        if len(orders) != 0:
+            for i in range(0, len(orders)):
+                print(orders[i])
+        else:
+            print('None orders')
+        decision = int(input('Type 0 for give a product as delivered or 1 for out'))
+
+        if decision == 0:
+            id = int(input('Type the product ID'))
+            
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(f'DELETE FROM orders WHERE id = {id}')
+                connection.commit()
+                print('Success! Product deleted')
+        except:
+            print('UNKOWN ERROR')        
+
 
 while not auth:
     decision = int(input('Type 1 for login or 2 for register'))
@@ -87,7 +145,15 @@ while not auth:
         if PrincipalUser == True:
             UserDecision = 1
             while UserDecision != 0:    
-                UserDecision = int(input('Type 0 for out, 1 for register product'))
+                UserDecision = int(input('Type 0 for out, 1 for register product, 2 for list registered products, 3 for list orders'))
 
                 if UserDecision == 1:
                     RegisterProduct()
+                elif UserDecision == 2:
+                    ListProducts()
+
+                    delete = int(input('Type 1 for delete a product or 2 for out'))
+                    if delete == 1:
+                        DeleteProducts()
+                elif UserDecision == 3:
+                    ListOrders()
