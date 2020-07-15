@@ -1,5 +1,7 @@
-import pymysql.cursors
+# Importing library to make connection with sql
+import pymysql.cursors 
 
+# Creating connection with mysql
 connection = pymysql.connect(
     host = 'localhost',
     user = 'root',
@@ -9,8 +11,10 @@ connection = pymysql.connect(
     cursorclass = pymysql.cursors.DictCursor
 )
 
+# Condition for authenticate
 auth = False
 
+# Function to make login or register
 def loginRegister():
     user = 0
     authenticate = False
@@ -55,7 +59,7 @@ def loginRegister():
                     print('UNKOWN ERROR. Try Again')
     return authenticate, PrincipalUser
 
-
+# Function to register product in database
 def RegisterProduct():
     name = input('Type the product name: ')
     ingredients = input('Type the ingredients: ')
@@ -69,6 +73,7 @@ def RegisterProduct():
     except:
         print('UNKOWN ERROR')  
 
+# Function to show products
 def ListProducts():
     products = []
     try:
@@ -85,8 +90,9 @@ def ListProducts():
     else:
         print('0 products registereds')    
 
+# Function to delete products
 def DeleteProducts():
-    id = int(input('Type the id for the product you want to delete'))
+    id = int(input('Type the product id you want to delete'))
     try:
         with connection.cursor() as cursor:
             cursor.execute(f'DELETE FROM products WHERE id = {id}')
@@ -95,6 +101,7 @@ def DeleteProducts():
     except:
         print('UNKOWN ERROR')
 
+# Function to list orders in pizzeria
 def ListOrders():
     orders = []
     decision = 0
@@ -114,7 +121,7 @@ def ListOrders():
                 print(orders[i])
         else:
             print('None orders')
-        decision = int(input('Type 0 for give a product as delivered or 1 for out'))
+        decision = int(input('Type 0 to give a product as delivered or 1 to exit'))
 
         if decision == 0:
             id = int(input('Type the product ID'))
@@ -128,8 +135,9 @@ def ListOrders():
             print('UNKOWN ERROR')        
 
 
+# Code running 
 while not auth:
-    decision = int(input('Type 1 for login or 2 for register'))
+    decision = int(input('Type 1 to login or 2 to register'))
 
     try:
         with connection.cursor() as cursor:
@@ -145,15 +153,18 @@ while not auth:
         if PrincipalUser == True:
             UserDecision = 1
             while UserDecision != 0:    
-                UserDecision = int(input('Type 0 for out, 1 for register product, 2 for list registered products, 3 for list orders'))
+                UserDecision = int(input('Type 0 to exit, 1 to register product, 2 to list registered products, 3 to list orders, 4 to visualize statistics'))
 
                 if UserDecision == 1:
                     RegisterProduct()
                 elif UserDecision == 2:
                     ListProducts()
 
-                    delete = int(input('Type 1 for delete a product or 2 for out'))
+                    delete = int(input('Type 1 to delete a product or 2 to exit'))
                     if delete == 1:
                         DeleteProducts()
                 elif UserDecision == 3:
                     ListOrders()
+
+                elif UserDecision == 4:
+                    GenerateStatistic()
